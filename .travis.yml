@@ -1,0 +1,33 @@
+env:
+  global:
+  - CI_HOME=`pwd`/../../
+language: php
+php:
+- 5.3.3
+services:
+- memcached
+- mysqld
+- apache
+- sshd
+notifications:
+  slack:
+    on_success: never
+    on_failure: always
+before_install:
+- cd $CI_HOME
+- git clone --branch=master git@github.com:sahilsehgal81/travis-ci.git travis/travis-ci
+install:
+- cd $CI_HOME
+- cd travis/travis-ci
+- cat sahiltext
+before_script:
+- mysql -e 'create database swift;'
+- mysql -e 'create database swiftv5;'
+script:
+- cd $CI_HOME
+- cd travis/travis-ci
+- php test.php
+after_success:
+- cd $CI_HOME
+- cd travis/travis-ci
+- php package.php
